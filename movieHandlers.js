@@ -74,10 +74,31 @@ const postMovie = (req, res) => {
     })
 }
 
+const updateMovie = (req, res) => {
+  const id = parseInt(req.params.id)
+  const { title, director, year, color, duration } = req.body
+  database
+    .query('UPDATE movies SET title = ?, director = ?, year= ?, color = ?, duration = ? WHERE id = ?', [title, director, year, color, duration, id])
+    .then(([result]) => {
+      // si aucune ligne de la base n'est affecté cela veut dire que la data est introuvable
+      if(result.affectedRows === 0) {
+        res.status(404).send('Not found')
+      } else {
+        // sinon request successful (no-content to send)
+        res.sendStatus(204)
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error editing the movie");
+    })
+}
+
 
 
 module.exports = {
   getMovies,
   getMovieById,
-  postMovie
+  postMovie,
+  updateMovie,
 };

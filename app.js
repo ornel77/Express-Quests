@@ -27,6 +27,9 @@ app.get("/api/movies/:id", movieHandlers.getMovieById);
 // POST
 app.post('/api/movies', movieHandlers.postMovie)
 
+// PUT
+app.put('/api/movies/:id', movieHandlers.updateMovie)
+
 /* ------------------------------- USERS ROUTE ------------------------------ */
 // GET
 app.get("/api/users", userHandlers.getUsers)
