@@ -31,6 +31,9 @@ app.post('/api/movies', validateMovie, movieHandlers.postMovie)
 // PUT
 app.put('/api/movies/:id',validateMovie, movieHandlers.updateMovie)
 
+// DELETE
+app.delete('/api/movies/:id', movieHandlers.deleteMovie)
+
 /* ------------------------------- USERS ROUTE ------------------------------ */
 // GET
 app.get("/api/users", userHandlers.getUsers)
@@ -41,6 +44,9 @@ app.post('/api/users', validateUser, userHandlers.postUsers)
 
 // PUT
 app.put('/api/users/:id', validateUser, userHandlers.updateUser)
+
+// DELETE
+app.delete('/api/users/:id', userHandlers.deleteUser)
 
 
 
