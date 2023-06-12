@@ -34,7 +34,7 @@ const getUsers = (req, res ) => {
 const getUserById = (req, res) => {
     const id = parseInt(req.params.id)
     database
-        .query('select * from users where id=?', [id])
+        .query('select id, firstname, lastname, email, city, language from users where id=?', [id])
         .then(([users]) => {
             if(users[0] != null) {
                 res.json(users[0])
@@ -63,9 +63,9 @@ const postUsers = (req, res) => {
 
 const updateUser = (req, res) => {
     const id = parseInt(req.params.id)
-    const {firstname, lastname, email, city, language} = req.body
+    const {firstname, lastname, email, city, language, hashedPassword} = req.body
     database
-        .query('UPDATE users SET firstname = ?, lastname = ?, email= ?, city = ?, language = ? WHERE id = ?', [firstname, lastname, email, city, language, id])
+        .query('UPDATE users SET firstname = ?, lastname = ?, email= ?, city = ?, language = ?, hashedPassword = ? WHERE id = ?', [firstname, lastname, email, city, language,hashedPassword, id])
         .then(([result]) => {
             if(result.affectedRows === 0) {
                 res.status(404).send('Not found')
