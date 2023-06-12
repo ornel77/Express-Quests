@@ -11,8 +11,7 @@ const hashPassword = (req, res, next) => {
     argon2
         .hash(password, hashingOptions) //hasher le mdp
         .then((hashedPassword) => {
-            // la promess retounne le mdp hasher
-            console.log(hashedPassword)
+            // la promesse retounne le mdp hasher
             // donner le mdp hasher à mon champ hashedPassword
             req.body.hashedPassword = hashedPassword
             delete password
