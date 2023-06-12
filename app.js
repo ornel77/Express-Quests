@@ -19,6 +19,7 @@ app.get("/", welcome);
 const movieHandlers = require("./movieHandlers");
 const userHandlers = require("./userHandlers")
 const {validateMovie, validateUser} = require('./validators')
+const { hashPassword } = require('./auth.js')
 
 /* ------------------------------ MOVIES ROUTE ------------------------------ */
 // GET
@@ -40,10 +41,10 @@ app.get("/api/users", userHandlers.getUsers)
 app.get("/api/users/:id", userHandlers.getUserById)
 
 // POST
-app.post('/api/users', validateUser, userHandlers.postUsers)
+app.post('/api/users', validateUser, hashPassword , userHandlers.postUsers)
 
 // PUT
-app.put('/api/users/:id', validateUser, userHandlers.updateUser)
+app.put('/api/users/:id', validateUser, hashPassword, userHandlers.updateUser)
 
 // DELETE
 app.delete('/api/users/:id', userHandlers.deleteUser)
