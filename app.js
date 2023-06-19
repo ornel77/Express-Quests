@@ -19,35 +19,52 @@ app.get("/", welcome);
 const movieHandlers = require("./movieHandlers");
 const userHandlers = require("./userHandlers")
 const {validateMovie, validateUser} = require('./validators')
-const { hashPassword } = require('./auth.js')
+const { hashPassword, verifyPassword, verifyToken } = require('./middlewares/auth')
+
+const isCredentiaValid = (req, res, next) => {
+  const { email, password } = req.body
+  if(email === 'dwight@theoffice.com' && password==="123456") {
+    res.send("Credentials are valid")
+  } else {
+    res.sendStatus(401)
+  }
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                                PUBLIC ROUTES                               */
+/* -------------------------------------------------------------------------- */
 
 /* ------------------------------ MOVIES ROUTE ------------------------------ */
-// GET
 app.get("/api/movies", movieHandlers.getMovies);
 app.get("/api/movies/:id", movieHandlers.getMovieById);
 
-// POST
+/* ------------------------------- USERS ROUTE ------------------------------ */
+
+app.get("/api/users", userHandlers.getUsers)
+app.get("/api/users/:id", userHandlers.getUserById)
+app.post('/api/users', validateUser, hashPassword , userHandlers.postUsers)
+
+/* ---------------------------------- Login --------------------------------- */
+app.post('/api/login', userHandlers.getUserByEmailWithPasswordAndPassToNext, verifyPassword)
+
+
+/* -------------------------------------------------------------------------- */
+/*                           PRIVATES ROUTES / WALL                           */
+/* -------------------------------------------------------------------------- */
+// authentication WALL : verifyToken is activated for each route after this line
+app.use(verifyToken)
+
+/* ------------------------------ MOVIES ROUTE ------------------------------ */
 app.post('/api/movies', validateMovie, movieHandlers.postMovie)
-
-// PUT
 app.put('/api/movies/:id',validateMovie, movieHandlers.updateMovie)
-
-// DELETE
 app.delete('/api/movies/:id', movieHandlers.deleteMovie)
 
 /* ------------------------------- USERS ROUTE ------------------------------ */
-// GET
-app.get("/api/users", userHandlers.getUsers)
-app.get("/api/users/:id", userHandlers.getUserById)
-
-// POST
-app.post('/api/users', validateUser, hashPassword , userHandlers.postUsers)
-
-// PUT
 app.put('/api/users/:id', validateUser, hashPassword, userHandlers.updateUser)
-
-// DELETE
 app.delete('/api/users/:id', userHandlers.deleteUser)
+
+
 
 
 

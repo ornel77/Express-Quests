@@ -38,6 +38,7 @@ const validateUser = [
   body('email').trim().notEmpty().isEmail(),
   body('city').optional().isLength({ max: 255 }),
   body('language').optional().isLength({ max: 255 }),
+  body('password').notEmpty().matches(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

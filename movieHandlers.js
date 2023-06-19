@@ -1,4 +1,4 @@
-const database = require('./database')
+const database = require('./database');
 
 // const movies = [
 //   {
@@ -28,20 +28,19 @@ const database = require('./database')
 // ];
 
 const getMovies = (req, res) => {
-  let sql = 'select * from movies'
-  let sqlValues = []
-  if(req.query.color) {
-    sql += ' where color = ?'
-    sqlValues.push(req.query.color)
+  let sql = 'select * from movies';
+  let sqlValues = [];
+  if (req.query.color) {
+    sql += ' where color = ?';
+    sqlValues.push(req.query.color);
 
-    if(req.query.max_duration) {
-      sql += ' and duration <= ?'
-    sqlValues.push(req.query.max_duration)
+    if (req.query.max_duration) {
+      sql += ' and duration <= ?';
+      sqlValues.push(req.query.max_duration);
     }
-  }
-  else if(req.query.max_duration) {
-    sql += ' where duration <= ?'
-    sqlValues.push(req.query.max_duration)
+  } else if (req.query.max_duration) {
+    sql += ' where duration <= ?';
+    sqlValues.push(req.query.max_duration);
   }
   database
     .query(sql, sqlValues)
@@ -50,8 +49,8 @@ const getMovies = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("Error retrieving data from database")
-    })
+      res.status(500).send('Error retrieving data from database');
+    });
 };
 
 const getMovieById = (req, res) => {
@@ -60,73 +59,74 @@ const getMovieById = (req, res) => {
   database
     .query('select * from movies where id = ?', [id])
     .then(([movies]) => {
-      if(movies[0] != null) {
+      if (movies[0] != null) {
         res.json(movies[0]);
       } else {
-        res.status(404).send('not found')
+        res.status(404).send('not found');
       }
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("Error retrieving data from database")
-    })
+      res.status(500).send('Error retrieving data from database');
+    });
 };
 
 const postMovie = (req, res) => {
   console.log(req.body);
-  const {title, director, year, color, duration} = req.body
+  const { title, director, year, color, duration } = req.body;
   database
-  .query(
-    "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
-    [title, director, year, color, duration]
-  )
+    .query(
+      'INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)',
+      [title, director, year, color, duration]
+    )
     .then(([result]) => {
-      res.location(`/api/movies/${result.insertId}`).sendStatus(201)
+      res.location(`/api/movies/${result.insertId}`).sendStatus(201);
     })
     .catch((error) => {
       console.error(error);
-      res.status(500).send("Error saving the movie");
-    })
-}
+      res.status(500).send('Error saving the movie');
+    });
+};
 
 const updateMovie = (req, res) => {
-  const id = parseInt(req.params.id)
-  const { title, director, year, color, duration } = req.body
+  const id = parseInt(req.params.id);
+  const { title, director, year, color, duration } = req.body;
   database
-    .query('UPDATE movies SET title = ?, director = ?, year= ?, color = ?, duration = ? WHERE id = ?', [title, director, year, color, duration, id])
+    .query(
+      'UPDATE movies SET title = ?, director = ?, year= ?, color = ?, duration = ? WHERE id = ?',
+      [title, director, year, color, duration, id]
+    )
     .then(([result]) => {
       // si aucune ligne de la base n'est affecté cela veut dire que la data est introuvable
-      if(result.affectedRows === 0) {
-        res.status(404).send('Not found')
+      if (result.affectedRows === 0) {
+        res.status(404).send('Not found');
       } else {
         // sinon request successful (no-content to send)
-        res.sendStatus(204)
+        res.sendStatus(204);
       }
     })
     .catch((error) => {
       console.error(error);
-      res.status(500).send("Error editing the movie");
-    })
-}
+      res.status(500).send('Error editing the movie');
+    });
+};
 
 const deleteMovie = (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = parseInt(req.params.id);
   database
     .query('DELETE FROM movies WHERE id = ?', [id])
-    .then(([result]) => { 
-      if(result.affectedRows === 0) {
-        res.status(404).send('not found')
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.status(404).send('not found');
       } else {
-        res.sendStatus(204)
+        res.sendStatus(204);
       }
     })
     .catch((error) => {
       console.error(error);
-      res.status(500).send("Error deleting the movie");
-    })
-}
-
-
+      res.status(500).send('Error deleting the movie');
+    });
+};
 
 module.exports = {
   getMovies,
